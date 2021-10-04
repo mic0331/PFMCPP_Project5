@@ -385,11 +385,11 @@ int main()
     // 4.
     Kitchen kitchen;
     kitchen.start(dishwasher);
-    //kitchen.stop(dishwasher);
+    kitchen.stop(dishwasher);
     // 5.
     Garage garage;
-    //garage.park(bicycle, truck);
-    //garage.repair(truck);    
+    garage.park(bicycle, truck);
+    garage.repair(truck);    
 
     std::cout << "good to go!" << std::endl;
 }
