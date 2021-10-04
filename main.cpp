@@ -102,6 +102,7 @@ namespace Example
     bool turn(std::string direction = "left");
     bool useBreak();
     void doesSomethingInteresting(int variableA);
+    void printGear();
 };
 
 Bicycle::Person::~Person()
@@ -149,6 +150,11 @@ void Bicycle::doesSomethingInteresting(int variableA)
     }
 }
 
+void Bicycle::printGear()
+{
+    std::cout << "**** Gear : " << this->gear << std::endl;
+}
+
 Bicycle::~Bicycle()
 {
     std::cout << "Bicycle destroyed " << std::endl;
@@ -189,6 +195,7 @@ struct Dishwasher
     void informUser();
     bool lockDoor();
     void doesSomethingInteresting();
+    void printinputVoltage();
 };
 
 Dishwasher::Dish::~Dish()
@@ -228,6 +235,11 @@ void Dishwasher::doesSomethingInteresting()
         std::cout << "'inc' incremented by 5 --> " << inc << std::endl;
     }
     std::cout << "'inc' Final value " << inc << std::endl;
+}
+
+void Dishwasher::printinputVoltage()
+{
+    std::cout << "**** inputVoltage : " << this->inputVoltage << std::endl;
 }
 
 Dishwasher::~Dishwasher()
@@ -402,6 +414,9 @@ int main()
     dishwasher.lockDoor();
     dishwasher.informUser();
     dishwasher.doesSomethingInteresting();
+    std::cout << "**** inputVoltage : " << dishwasher.inputVoltage << std::endl;
+    dishwasher.printinputVoltage();
+
     // 2.
     Bicycle bicycle;
     bicycle.cycleAtSpeed(120);
@@ -409,6 +424,8 @@ int main()
     bicycle.turn("right");
     bicycle.doesSomethingInteresting(125);
     bicycle.doesSomethingInteresting(2);
+    std::cout << "**** Gear : " << bicycle.gear << std::endl;
+    bicycle.printGear();
     // 3.
     Truck truck (120, 4565);
     truck.moveFood(300);
