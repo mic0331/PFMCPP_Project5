@@ -19,6 +19,8 @@ Create a branch named Part3
       
     This means if you had something like the following in your main() previously: 
 */
+#include "LeakedObjectDetector.h"
+
 #if false
  Axe axe;
  std::cout << "axe sharpness: " << axe.sharpness << "\n";
@@ -88,6 +90,8 @@ You don't have to do this, you can keep your current object name and just change
     bool useBreak();
     void doesSomethingInteresting(int variableA);
     void printGear();
+
+    JUCE_LEAK_DETECTOR(Bicycle)
 };
 
 Bicycle::Person::~Person()
@@ -145,6 +149,16 @@ Bicycle::~Bicycle()
     std::cout << "Bicycle destroyed " << std::endl;
 }
 
+struct BicycleWrapper {
+    BicycleWrapper(Bicycle* ptr) : pointerToBicycle( ptr ) { }
+    ~BicycleWrapper()
+    {
+        delete pointerToBicycle;
+    }
+
+    Bicycle* pointerToBicycle = nullptr;
+};
+
 /*
  copied UDT 2:
  */
@@ -181,6 +195,8 @@ struct Dishwasher
     bool lockDoor();
     void doesSomethingInteresting();
     void printinputVoltage();
+
+    JUCE_LEAK_DETECTOR(Dishwasher)
 };
 
 Dishwasher::Dish::~Dish()
@@ -232,6 +248,16 @@ Dishwasher::~Dishwasher()
     std::cout << "Dishwasher destroyed " << std::endl;
 }
 
+struct DishwasherWrapper {
+    DishwasherWrapper(Dishwasher* ptr) : pointerToDishwasher( ptr ) { }
+    ~DishwasherWrapper()
+    {
+        delete pointerToDishwasher;
+    }
+
+    Dishwasher* pointerToDishwasher = nullptr;
+};
+
 
 /*
  copied UDT 3:
@@ -254,6 +280,8 @@ struct Truck
     bool moveFood(int quantity);
     void drive(int speed, int distance);
     int doesSomethingInteresting();
+
+    JUCE_LEAK_DETECTOR(Truck)
 };
 
 Truck::Truck(int speed, int truckWeight) : speedLimit (speed), weight(truckWeight)
@@ -302,6 +330,16 @@ Truck::~Truck()
     std::cout << "Truck destroyed " << std::endl;
 }
 
+struct TruckWrapper {
+    TruckWrapper(Truck* ptr) : pointerToTruck( ptr ) { }
+    ~TruckWrapper()
+    {
+        delete pointerToTruck;
+    }
+
+    Truck* pointerToTruck = nullptr;
+};
+
 
 /*
  new UDT 4:
@@ -315,8 +353,10 @@ struct Kitchen
 
     Dishwasher dishwasher;
 
-    void start(Dishwasher dishwasher);
-    void stop(Dishwasher dishwasher);
+    void start(Dishwasher* dishwasher);
+    void stop(Dishwasher* dishwasher);
+
+    JUCE_LEAK_DETECTOR(Kitchen)
 };
 
 Kitchen::Kitchen(): dishwasher(100)
@@ -329,15 +369,25 @@ Kitchen::~Kitchen()
     std::cout << "Destroy Kitchen " << std::endl;
 }
 
-void Kitchen::start(Dishwasher dishwasherMachine)
+void Kitchen::start(Dishwasher* dishwasherMachine)
 {
-    std::cout << "Start Dishwasher of capacity " << dishwasherMachine.capacity << std::endl;
+    std::cout << "Start Dishwasher of capacity " << dishwasherMachine->capacity << std::endl;
 }
 
-void Kitchen::stop(Dishwasher dishwasherMachine)
+void Kitchen::stop(Dishwasher* dishwasherMachine)
 {
-    std::cout << "Stop Dishwasher of capacity " << dishwasherMachine.capacity << std::endl;
+    std::cout << "Stop Dishwasher of capacity " << dishwasherMachine->capacity << std::endl;
 }
+
+struct KitchenWrapper {
+    KitchenWrapper(Kitchen* ptr) : pointerToKitchen( ptr ) { }
+    ~KitchenWrapper()
+    {
+        delete pointerToKitchen;
+    }
+
+    Kitchen* pointerToKitchen = nullptr;
+};
 
 /*
  new UDT 5:
@@ -352,8 +402,10 @@ struct Garage
     Bicycle bicyle;
     Truck truck;
 
-    void park(Bicycle, Truck);
-    void repair(Truck);
+    void park(Bicycle*, Truck*);
+    void repair(Truck*);
+
+    JUCE_LEAK_DETECTOR(Garage)
 };
 
 Garage::Garage() : truck(200, 30)
@@ -366,16 +418,26 @@ Garage::~Garage()
     std::cout << "Destroy Garage" << std::endl;
 }
 
-void Garage::park(Bicycle vehicle1, Truck vehicle2)
+void Garage::park(Bicycle* vehicle1, Truck* vehicle2)
 {
-    std::cout << "Park vehicle1 at speed" << vehicle1.speed << std::endl;
-    std::cout << "Park vehicle2 of weight" << vehicle2.weight << std::endl;
+    std::cout << "Park vehicle1 at speed" << vehicle1->speed << std::endl;
+    std::cout << "Park vehicle2 of weight" << vehicle2->weight << std::endl;
 }
 
-void Garage::repair(Truck vehcile)
+void Garage::repair(Truck* vehcile)
 {
-    std::cout << "Repair axle " << vehcile.numberOfAxle << " of Truck " << std::endl;
+    std::cout << "Repair axle " << vehcile->numberOfAxle << " of Truck " << std::endl;
 }
+
+struct GarageWrapper {
+    GarageWrapper(Garage* ptr) : pointerToGarage( ptr ) { }
+    ~GarageWrapper()
+    {
+        delete pointerToGarage;
+    }
+
+    Garage* pointerToGarage = nullptr;
+};
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -394,37 +456,43 @@ void Garage::repair(Truck vehcile)
 int main()
 {
     // 1.
-    Dishwasher dishwasher (1500);
-    dishwasher.washDishes(250);
-    dishwasher.lockDoor();
-    dishwasher.informUser();
-    dishwasher.doesSomethingInteresting();
-    std::cout << "**** inputVoltage : " << dishwasher.inputVoltage << std::endl;
-    dishwasher.printinputVoltage();
+    Dishwasher* dishwasher = new Dishwasher (1500);
+    DishwasherWrapper dishwasherWrapper (dishwasher);
+    dishwasher->washDishes(250);
+    dishwasher->lockDoor();
+    dishwasher->informUser();
+    dishwasher->doesSomethingInteresting();
+    std::cout << "**** inputVoltage : " << dishwasher->inputVoltage << std::endl;
+    dishwasher->printinputVoltage();
 
     // 2.
-    Bicycle bicycle;
-    bicycle.cycleAtSpeed(120);
-    bicycle.useBreak();
-    bicycle.turn("right");
-    bicycle.doesSomethingInteresting(125);
-    bicycle.doesSomethingInteresting(2);
-    std::cout << "**** Gear : " << bicycle.gear << std::endl;
-    bicycle.printGear();
+    Bicycle* bicycle = new Bicycle();
+    BicycleWrapper bicycleWrapper (bicycle);
+    bicycle->cycleAtSpeed(120);
+    bicycle->useBreak();
+    bicycle->turn("right");
+    bicycle->doesSomethingInteresting(125);
+    bicycle->doesSomethingInteresting(2);
+    std::cout << "**** Gear : " << bicycle->gear << std::endl;
+    bicycle->printGear();
+
     // 3.
-    Truck truck (120, 4565);
-    truck.moveFood(300);
-    truck.drive(140, 20);
-    truck.fitTrailer("long", 120);
-    std::cout << "Final value of X for Truck --> " << truck.doesSomethingInteresting() << std::endl;
+    Truck* truck = new Truck(120, 4565);
+    TruckWrapper truckWrapper (truck);
+    truck->moveFood(300);
+    truck->drive(140, 20);
+    truck->fitTrailer("long", 120);
+    std::cout << "Final value of X for Truck --> " << truck->doesSomethingInteresting() << std::endl;
     // 4.
-    Kitchen kitchen;
-    kitchen.start(dishwasher);
-    kitchen.stop(dishwasher);
+    Kitchen* kitchen = new Kitchen();
+    KitchenWrapper kitchenWrapper (kitchen);
+    kitchen->start(dishwasher);
+    kitchen->stop(dishwasher);
     // 5.
-    Garage garage;
-    garage.park(bicycle, truck);
-    garage.repair(truck);    
+    Garage* garage = new Garage();
+    GarageWrapper garageWrapper (garage);
+    garage->park(bicycle, truck);
+    garage->repair(truck);    
 
     std::cout << "good to go!" << std::endl;
 }
