@@ -149,7 +149,8 @@ Bicycle::~Bicycle()
     std::cout << "Bicycle destroyed " << std::endl;
 }
 
-struct BicycleWrapper {
+struct BicycleWrapper 
+{
     BicycleWrapper(Bicycle* ptr) : pointerToBicycle( ptr ) { }
     ~BicycleWrapper()
     {
@@ -248,7 +249,8 @@ Dishwasher::~Dishwasher()
     std::cout << "Dishwasher destroyed " << std::endl;
 }
 
-struct DishwasherWrapper {
+struct DishwasherWrapper 
+{
     DishwasherWrapper(Dishwasher* ptr) : pointerToDishwasher( ptr ) { }
     ~DishwasherWrapper()
     {
@@ -330,7 +332,8 @@ Truck::~Truck()
     std::cout << "Truck destroyed " << std::endl;
 }
 
-struct TruckWrapper {
+struct TruckWrapper 
+{
     TruckWrapper(Truck* ptr) : pointerToTruck( ptr ) { }
     ~TruckWrapper()
     {
@@ -379,7 +382,8 @@ void Kitchen::stop(Dishwasher* dishwasherMachine)
     std::cout << "Stop Dishwasher of capacity " << dishwasherMachine->capacity << std::endl;
 }
 
-struct KitchenWrapper {
+struct KitchenWrapper 
+{
     KitchenWrapper(Kitchen* ptr) : pointerToKitchen( ptr ) { }
     ~KitchenWrapper()
     {
@@ -429,7 +433,8 @@ void Garage::repair(Truck* vehcile)
     std::cout << "Repair axle " << vehcile->numberOfAxle << " of Truck " << std::endl;
 }
 
-struct GarageWrapper {
+struct GarageWrapper 
+{
     GarageWrapper(Garage* ptr) : pointerToGarage( ptr ) { }
     ~GarageWrapper()
     {
@@ -456,43 +461,40 @@ struct GarageWrapper {
 int main()
 {
     // 1.
-    Dishwasher* dishwasher = new Dishwasher (1500);
-    DishwasherWrapper dishwasherWrapper (dishwasher);
-    dishwasher->washDishes(250);
-    dishwasher->lockDoor();
-    dishwasher->informUser();
-    dishwasher->doesSomethingInteresting();
-    std::cout << "**** inputVoltage : " << dishwasher->inputVoltage << std::endl;
-    dishwasher->printinputVoltage();
+    DishwasherWrapper dishwasherWrapper (new Dishwasher (1500));
+    dishwasherWrapper.pointerToDishwasher->washDishes(250);
+
+    dishwasherWrapper.pointerToDishwasher->lockDoor();
+    dishwasherWrapper.pointerToDishwasher->informUser();
+    dishwasherWrapper.pointerToDishwasher->doesSomethingInteresting();
+    std::cout << "**** inputVoltage : " << dishwasherWrapper.pointerToDishwasher->inputVoltage << std::endl;
+    dishwasherWrapper.pointerToDishwasher->printinputVoltage();
 
     // 2.
-    Bicycle* bicycle = new Bicycle();
-    BicycleWrapper bicycleWrapper (bicycle);
-    bicycle->cycleAtSpeed(120);
-    bicycle->useBreak();
-    bicycle->turn("right");
-    bicycle->doesSomethingInteresting(125);
-    bicycle->doesSomethingInteresting(2);
-    std::cout << "**** Gear : " << bicycle->gear << std::endl;
-    bicycle->printGear();
+    BicycleWrapper bicycleWrapper (new Bicycle());
+    bicycleWrapper.pointerToBicycle->cycleAtSpeed(120);
+    bicycleWrapper.pointerToBicycle->useBreak();
+    bicycleWrapper.pointerToBicycle->turn("right");
+    bicycleWrapper.pointerToBicycle->doesSomethingInteresting(125);
+    bicycleWrapper.pointerToBicycle->doesSomethingInteresting(2);
+    std::cout << "**** Gear : " << bicycleWrapper.pointerToBicycle->gear << std::endl;
+    bicycleWrapper.pointerToBicycle->printGear();
 
     // 3.
-    Truck* truck = new Truck(120, 4565);
-    TruckWrapper truckWrapper (truck);
-    truck->moveFood(300);
-    truck->drive(140, 20);
-    truck->fitTrailer("long", 120);
-    std::cout << "Final value of X for Truck --> " << truck->doesSomethingInteresting() << std::endl;
+    TruckWrapper truckWrapper (new Truck(120, 4565));
+    truckWrapper.pointerToTruck->moveFood(300);
+    truckWrapper.pointerToTruck->drive(140, 20);
+    truckWrapper.pointerToTruck->fitTrailer("long", 120);
+    std::cout << "Final value of X for Truck --> " << truckWrapper.pointerToTruck->doesSomethingInteresting() << std::endl;
     // 4.
-    Kitchen* kitchen = new Kitchen();
-    KitchenWrapper kitchenWrapper (kitchen);
-    kitchen->start(dishwasher);
-    kitchen->stop(dishwasher);
+    KitchenWrapper kitchenWrapper (new Kitchen());
+    kitchenWrapper.pointerToKitchen->start(dishwasherWrapper.pointerToDishwasher);
+    kitchenWrapper.pointerToKitchen->stop(dishwasherWrapper.pointerToDishwasher);
     // 5.
     Garage* garage = new Garage();
     GarageWrapper garageWrapper (garage);
-    garage->park(bicycle, truck);
-    garage->repair(truck);    
+    garage->park(bicycleWrapper.pointerToBicycle, truckWrapper.pointerToTruck);
+    garage->repair(truckWrapper.pointerToTruck);    
 
     std::cout << "good to go!" << std::endl;
 }
