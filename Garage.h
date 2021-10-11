@@ -1,5 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include "LeakedObjectDetector.h"
+#include "Truck.h"
+#include "Bicycle.h"
 
 struct Garage
 {

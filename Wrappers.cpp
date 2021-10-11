@@ -1,5 +1,10 @@
 #include <iostream>
 #include "Wrappers.h"
+#include "Bicycle.h"
+#include "Dishwasher.h"
+#include "Garage.h"
+#include "Kitchen.h"
+#include "Truck.h"
 
 BicycleWrapper::BicycleWrapper(Bicycle* ptr) : pointerToBicycle( ptr ) { }
 
@@ -10,9 +15,10 @@ BicycleWrapper::~BicycleWrapper()
 
 DishwasherWrapper::DishwasherWrapper(Dishwasher* ptr) : pointerToDishwasher( ptr ) { }
 
+ 
 DishwasherWrapper::~DishwasherWrapper()
 {
-    delete pointerToDishwasher;
+    delete pointerToDishwasher; // because we're calling Dishwasher::~Dishwasher() when we delete the pointer.
 }
 
 GarageWrapper::GarageWrapper(Garage* ptr) : pointerToGarage( ptr ) { }
