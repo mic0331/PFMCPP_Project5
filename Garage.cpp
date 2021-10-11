@@ -19,7 +19,7 @@ void Garage::park(Bicycle* vehicle1, Truck* vehicle2)
     std::cout << "Park vehicle2 of weight" << vehicle2->weight << std::endl;
 }
 
-void Garage::repair(Truck* vehcile)
+void Garage::repair(Truck* vehicle)
 {
-    std::cout << "Repair axle " << vehcile->numberOfAxle << " of Truck " << std::endl;
+    std::cout << "Repair axle " << vehicle->numberOfAxle << " of Truck " << std::endl;
 }
