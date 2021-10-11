@@ -1,3 +1,5 @@
+#pragma once
+
 struct Dishwasher;
 struct Bicycle;
 struct Truck;
